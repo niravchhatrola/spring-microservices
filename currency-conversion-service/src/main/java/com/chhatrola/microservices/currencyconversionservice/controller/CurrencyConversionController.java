@@ -1,6 +1,8 @@
 package com.chhatrola.microservices.currencyconversionservice.controller;
 
 import com.chhatrola.microservices.currencyconversionservice.model.CurrencyConversionBean;
+import com.chhatrola.microservices.currencyconversionservice.model.CurrencyExchangeServiceProxy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
@@ -13,8 +15,14 @@ import java.math.BigDecimal;
 @RestController
 public class CurrencyConversionController {
 
+    @Autowired
+    CurrencyExchangeServiceProxy proxy;
+
     @GetMapping("/currency-convertor/from/{from}/to/{to}/quantity/{quantity}")
     public CurrencyConversionBean convertCurrency(@PathVariable("from") String from, @PathVariable("to") String to, @PathVariable("quantity") BigDecimal quantity){
-        return new CurrencyConversionBean(1l, from, to , BigDecimal.valueOf(64), BigDecimal.valueOf(1000), BigDecimal.valueOf(64000),"8100");
+        CurrencyConversionBean currencyConversionBean = proxy.retrieveExchangeValue(from, to);
+        currencyConversionBean.setQuantity(quantity);
+        currencyConversionBean.setTotalCalculatedAmount(currencyConversionBean.getConversionMultiple().multiply(quantity));
+        return currencyConversionBean;
     }
 }
