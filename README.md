@@ -97,9 +97,22 @@ Need to create proxy for feign client
 Add below annotation in main class
 @EnableFeignClients
 ```
-
-
-
+## netflix-zuul-api-gateway-server
+This componant is gateway so it can be configured with any component and it will work as filter.
+```
+Add below dependency
+<dependency>
+ <groupId>org.springframework.cloud</groupId>
+ <artifactId>spring-cloud-starter-netflix-zuul</artifactId>
+</dependency>
+Add below in main class
+@EnableZuulProxy
+Need to extend zuulfilter for filter logic
+public class ZuulLoggingFilter extends ZuulFilter {
+---
+---
+}
+```
 
 
 
